@@ -38,7 +38,7 @@
               "user_name": {
                   "type": "string"
               },
-              "e-mail": {
+              "email": {
                   "type": "string"
               },
               "password": {
@@ -47,7 +47,7 @@
           },
           "required": [
               "user_name",
-              "e-mail",
+              "email",
               "password"
           ]
       },
