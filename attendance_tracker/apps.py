@@ -1,6 +1,6 @@
 from django.apps import AppConfig
 
 
-class HelpdeskConfig(AppConfig):
+class AttendanceTrackerConfig(AppConfig):
     default_auto_field = 'django.db.models.BigAutoField'
-    name = 'helpdesk'
+    name = 'attendance_tracker'
