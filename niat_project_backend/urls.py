@@ -22,9 +22,19 @@ from attendance_tracker.views.attendance_info_api import \
     attendance_info_home_page_api
 from attendance_tracker.views.punch_in_api import punch_in_api
 from attendance_tracker.views.punch_out_api import punch_out_api
-from niat_auth.views.user_sign_in_and_sign_up_view import *
+from niat_auth.views.log_out_view import logout
+from niat_auth.views.refresh_token_view import refresh_token
+from niat_auth.views.sing_in_view import login
+from niat_auth.views.sing_up_view import sign_up
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-
+    path('punch_in/', punch_in_api),
+    path('punch_out/', punch_out_api),
+    path('attendance_report/', attendance_report_api),
+    path('attendance_info/', attendance_info_home_page_api),
+    path('login/', login),
+    path('logout/', logout),
+    path('sign-up/', sign_up),
+    path('refresh-token/', refresh_token),
 ]

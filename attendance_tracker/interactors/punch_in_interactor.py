@@ -1,4 +1,6 @@
 from django.core.exceptions import ObjectDoesNotExist
+from django.http import JsonResponse
+from rest_framework import status
 
 from attendance_tracker.storage.PunchInStorageImplementation import \
     PunchInStorageImplementation
@@ -21,8 +23,15 @@ class PunchInInteractor:
             raise Exception("Invalid user ID")
         if token.expires_at < timezone.now():
             raise Exception("Access token has expired")
+
+        # Create punch-in entry
         punch_in_instance = self.storage.create_punch_in(user_id)
         if punch_in_instance is None:
-            raise Exception("Punch in failed")
+            return JsonResponse(
+                {"message": "No punch-in required today (Holiday or Late)."},
+                status=status.HTTP_200_OK)
 
         return self.presenter.punch_in_attendance_response(punch_in_instance)
+
+    def mark_absent_if_no_punch_in(self, user_id: int):
+        self.storage.mark_absent_for_no_punch_in(user_id)

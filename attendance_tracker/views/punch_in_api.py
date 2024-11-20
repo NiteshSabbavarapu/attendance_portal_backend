@@ -34,5 +34,9 @@ def punch_in_api(request):
     presenter = PunchInPresenterImplementation()
     interactor = PunchInInteractor(storage=storage, presenter=presenter)
 
+    # Mark absent for no punch-in after 10:00 AM
+    interactor.mark_absent_if_no_punch_in(user.id)
+
+    # Perform punch-in logic
     response = interactor.punch_in(user_id=user.id)
     return response
