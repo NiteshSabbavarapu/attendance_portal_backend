@@ -17,6 +17,14 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 
+from attendance_tracker.views.attendace_report_api import attendance_report_api
+from attendance_tracker.views.attendance_info_api import \
+    attendance_info_home_page_api
+from attendance_tracker.views.punch_in_api import punch_in_api
+from attendance_tracker.views.punch_out_api import punch_out_api
+from niat_auth.views.user_sign_in_and_sign_up_view import *
+
 urlpatterns = [
     path('admin/', admin.site.urls),
+
 ]

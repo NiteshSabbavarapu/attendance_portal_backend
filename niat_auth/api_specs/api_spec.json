@@ -1,0 +1,158 @@
+{
+    "swagger": "2.0",
+    "host": "localhost:8000",
+    "basePath": "/api/niat_auth/",
+    "info": {
+        "version": "1.0.0",
+        "title": "Simple API",
+        "description": "A simple API to learn how to write OpenAPI Specification"
+    },
+    "schemes": [
+        "https",
+        "http"
+    ],
+    "consumes": [
+        "application/json"
+    ],
+    "produces": [
+        "application/json"
+    ],
+    "securityDefinitions": {
+        "oauth": {
+            "tokenUrl": "http://auth.ibtspl.com/oauth2/",
+            "flow": "password",
+            "scopes": {
+                "read": "read users",
+                "write": "create users",
+                "update": "update users",
+                "delete": "delete users",
+                "superuser": "super user permission"
+            },
+            "type": "oauth2"
+        }
+    },
+    "definitions": {
+        "UserSignin": {
+            "type": "object",
+            "properties": {
+                "student_id": {
+                    "type": "string"
+                },
+                "password": {
+                    "type": "string"
+                }
+            },
+            "required": [
+                "student_id",
+                "password"
+            ]
+        },
+        "UserSigninResponse": {
+            "type": "object",
+            "properties": {
+                "access_token": {
+                    "type": "string"
+                },
+                "refresh_token": {
+                    "type": "string"
+                },
+                "expires_in": {
+                    "type": "string"
+                },
+                "user_id": {
+                    "type": "string"
+                }
+            },
+            "required": [
+                "access_token",
+                "refresh_token",
+                "expires_in",
+                "user_id"
+            ]
+        },
+        "ErrorResponse": {
+            "type": "object",
+            "properties": {
+                "message": {
+                    "type": "string"
+                }
+            }
+        }
+    },
+    "parameters": {
+        "SignInUserParameter": {
+            "name": "person",
+            "in": "body",
+            "description": "The person to sign in.",
+            "required": true,
+            "schema": {
+                "$ref": "#/definitions/UserSignin"
+            }
+        }
+    },
+    "responses": {
+        "SignInUserResponse": {
+            "description": "Success Response",
+            "schema": {
+                "$ref": "#/definitions/UserSigninResponse"
+            }
+        },
+        "ErrorResponse": {
+            "description": "Error Response",
+            "schema": {
+                "$ref": "#/definitions/ErrorResponse"
+            }
+        }
+    },
+    "paths": {
+        "/sign_in/v1/": {
+            "post": {
+                "operationId": "sign_in",
+                "summary": "Sign in User",
+                "description": "Use sign in",
+                "security": [
+                    {
+                        "oauth": [
+                            "superuser"
+                        ]
+                    }
+                ],
+                "parameters": [
+                    {
+                        "$ref": "#/parameters/SignInUserParameter"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success Response",
+                        "schema": {
+                            "$ref": "#/definitions/UserSigninResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/ErrorResponse"
+                        },
+                        "examples": {
+                            "application/json": {
+                                "message": "Invalid request: Missing or invalid parameters."
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/ErrorResponse"
+                        },
+                        "examples": {
+                            "application/json": {
+                                "message": "Invalid credentials"
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
