@@ -14,7 +14,8 @@ class PunchInPresenterImplementation(PunchInPresenterInterface):
             }
         else:
             response_data = {
-                "message": f"Attendance punched in successfully at {punch_in_instance.punch_in}. Status: {punch_in_instance.attendance_status}",
+                "message": f"Attendance punched in successfully at "f"{punch_in_instance.punch_in}",
+
                 "status_code": status.HTTP_200_OK
             }
         return JsonResponse(response_data, status=status.HTTP_200_OK)

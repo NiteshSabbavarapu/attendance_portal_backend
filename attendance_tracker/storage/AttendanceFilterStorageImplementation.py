@@ -5,8 +5,7 @@ from attendance_tracker.interactors.Storage_interfaces.AttendanceFilterStorageIn
 
 
 class AttendanceFilterStorageImplementation(AttendanceFilterStorageInterface):
-    def get_filtered_attendance(self, user_id, status=None, start_date=None,
-                                end_date=None):
+    def get_filtered_attendance(self, user_id, status, start_date,end_date):
         records = Attendance_punch_in_model.objects.filter(user_id=user_id)
 
         if status:

@@ -26,16 +26,26 @@ class AttendanceInfoStorageImplementation(AttendanceInfoStorageInterface):
             attendance_status="Absent"
         ).values('punch_in__date').distinct()
 
+        user_holiday = Attendance_punch_in_model.objects.filter(
+            user_id=user_id,
+            punch_in__year=year,
+            punch_in__month=month,
+            attendance_status="Holiday"
+        ).values('punch_in__date').distinct()
+
         total_days_in_month = calendar.monthrange(year, month)[1]
         present_days = len(user_attendance)
         absent_days = len(user_absent)
-        remaining_days = total_days_in_month - present_days - absent_days
+        holiday_days = len(user_holiday)
+        remaining_days = total_days_in_month - present_days - absent_days - holiday_days
         attendance_percentage = (
-                                        present_days / total_days_in_month) * 100 if total_days_in_month else 0
+                                        present_days / (
+                                            total_days_in_month - holiday_days)) * 100 if (
+            total_days_in_month) else 0
 
         return {
             "attendance_percentage": attendance_percentage,
             "present_days": present_days,
             "absent_days": absent_days,
-            # "remaining_days": remaining_days
+            "remaining_days": remaining_days
         }

@@ -1,5 +1,6 @@
 from django.core.exceptions import ObjectDoesNotExist
 from django.http import JsonResponse
+from oauth2_provider.models import AccessToken
 from rest_framework import status
 from rest_framework.decorators import api_view
 
@@ -9,13 +10,13 @@ from attendance_tracker.storage.PunchOutStorageImplementation import \
     PunchOutStorageImplementation
 from attendance_tracker.interactors.punch_out_interactor import \
     PunchOutInteractor
-from niat_auth.models import AuthToken
+from niat_auth.models import User
 from django.utils import timezone
 
 
 @api_view(['POST'])
 def punch_out_api(request):
-    auth_token = request.data.get('auth_token')
+    auth_token = request.data.get('access_token')
     note = request.data.get('note_of_the_day', "")
 
     if not auth_token:
@@ -23,8 +24,8 @@ def punch_out_api(request):
                             status=status.HTTP_400_BAD_REQUEST)
 
     try:
-        token = AuthToken.objects.get(access_token=auth_token)
-        if token.expires_at < timezone.now():
+        token = AccessToken.objects.get(token=auth_token)
+        if token.expires < timezone.now():
             return JsonResponse({"message": "Access token has expired."},
                                 status=status.HTTP_401_UNAUTHORIZED)
         user = token.user

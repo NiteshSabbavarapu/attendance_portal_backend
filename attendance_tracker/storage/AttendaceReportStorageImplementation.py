@@ -5,29 +5,21 @@ from attendance_tracker.interactors.Storage_interfaces.AttendanceReportStorageIn
 
 
 class AttendanceReportStorageImplementation(AttendanceReportStorageInterface):
-    def get_user_attendance(self, user_id: int, date: str):
-        input_date = datetime.strptime(date, '%Y-%m-%d')
-        year = input_date.year
-        month = input_date.month
-
-        attendance_records = (
-            Attendance_punch_in_model.objects.filter(
-                user_id=user_id,
-                punch_in__year=year,
-                punch_in__month=month
-            )
+    def get_recent_user_attendance(self, user_id: int):
+        # Fetch the 5 most recent punch-ins and punch-outs for the user
+        recent_punch_ins = (
+            Attendance_punch_in_model.objects.filter(user_id=user_id)
             .select_related('user')
-            .order_by('-punch_in')
+            .order_by('-punch_in')[:5]  # Adjust the number of records as needed
         )
 
-        punch_out_records = Attendance_punch_out_model.objects.filter(
-            user_id=user_id,
-            punch_out__year=year,
-            punch_out__month=month
-        ).order_by('-punch_out')
+        recent_punch_outs = (
+            Attendance_punch_out_model.objects.filter(user_id=user_id)
+            .order_by('-punch_out')[:5]
+        )
 
         attendance_history = []
-        for punch_in, punch_out in zip(attendance_records, punch_out_records):
+        for punch_in, punch_out in zip(recent_punch_ins, recent_punch_outs):
             attendance_history.append({
                 "user_id": user_id,
                 "punch_in": punch_in.punch_in,

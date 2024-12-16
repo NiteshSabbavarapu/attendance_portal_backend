@@ -5,11 +5,10 @@ from attendance_tracker.presenters.AttendaceReportPresenterImplementation import
 
 
 class AttendanceReportInteractor:
-    def __init__(self, storage: AttendanceReportStorageImplementation,
-                 presenter: AttendanceReportPresenterImplementation):
+    def __init__(self, storage, presenter):
         self.storage = storage
         self.presenter = presenter
 
-    def get_recent_attendance_history(self, user_id: int, date: str):
-        attendance_history = self.storage.get_user_attendance(user_id, date)
+    def get_recent_attendance_history(self, user_id: int):
+        attendance_history = self.storage.get_recent_user_attendance(user_id)
         return self.presenter.attendance_report_response(attendance_history)

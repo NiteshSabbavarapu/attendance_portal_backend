@@ -11,6 +11,7 @@ class AttendanceInfoPresenterImplementation(AttendanceInfoPresenterInterface):
                 'attendance_percentage'],
             "present_days": attendance_data['present_days'],
             "absent_days": attendance_data['absent_days'],
+            "remaining_days": attendance_data['remaining_days'],
             "status_code": status.HTTP_200_OK
         }
         return JsonResponse(response_data, status=status.HTTP_200_OK)

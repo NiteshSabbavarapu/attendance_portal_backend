@@ -1,7 +1,8 @@
 from django.core.exceptions import ObjectDoesNotExist
 from django.utils import timezone
+from oauth2_provider.models import AccessToken
 
-from niat_auth.models import AuthToken
+from niat_auth.models import User
 from attendance_tracker.storage.AttendanceInfoStorageImplementation import \
     AttendanceInfoStorageImplementation
 from attendance_tracker.presenters.AttendanceInfoPresenterImplementation import \
@@ -16,8 +17,8 @@ class AttendanceInfoInteractor:
 
     def get_attendance_info(self, user_id: int, date: str):
         try:
-            token = AuthToken.objects.get(user_id=user_id)
-            if token.expires_at < timezone.now():
+            token = AccessToken.objects.get(user=user_id)
+            if token.expires < timezone.now():
                 raise Exception("Access token has expired")
         except ObjectDoesNotExist:
             raise Exception("Invalid user ID")

@@ -5,7 +5,8 @@ from attendance_tracker.interactors.presenter_interfaces.AttendanceReportPresent
     AttendanceReportPresenterInterface
 
 
-class AttendanceReportPresenterImplementation(AttendanceReportPresenterInterface):
+class AttendanceReportPresenterImplementation(
+    AttendanceReportPresenterInterface):
     def attendance_report_response(self, attendance_history):
         response_data = {
             "recent_attendance_history": attendance_history,
